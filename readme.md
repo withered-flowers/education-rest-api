@@ -103,7 +103,7 @@ Pada bagian ini kita akan mencoba untuk mengoding sebuah REST API bikinan sendir
 #### Case & Tools
 Membuat suatu aplikasi backend berbasis REST API.
 
-Dengan syarat endpoint yang harus dibuat sesuai dengan dokumentasi yang diberikan.
+Dengan syarat endpoint yang harus dibuat sesuai dengan dokumentasi yang diberikan (nama dokumentasi: `apiDocumentation.md`)
 
 #### Langkah 1 - Inisialisasi DB
 #### Langkah 2 - Create (Promise)
