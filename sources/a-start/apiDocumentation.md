@@ -1,14 +1,16 @@
 ## Endpoints
 
-- GET /companies
-- POST /companies
-- DELETE /companies/:id
+List of Available Endpoints:
+- `GET /companies`
+- `POST /companies`
+- `DELETE /companies/:id`
 
 ### GET /companies
-Get all the companies data
+#### Description
+- Get all the companies data
 
 #### Response
-200 - OK
+_200 - OK_
 
 - Body
     ```json
@@ -30,7 +32,8 @@ Get all the companies data
 
 
 ### POST /companies
-Create a new company data
+#### Description
+- Create a new company data
 
 #### Request
 - Headers
@@ -47,7 +50,7 @@ Create a new company data
     }
     ```
 #### Response
-201 - Created
+_201 - Created_
 - Body
     ```json
     {
@@ -64,7 +67,7 @@ Create a new company data
     }
     ```
 
-400 - Bad Request
+_400 - Bad Request_
 - Body
     ```json
     {
@@ -76,14 +79,38 @@ Create a new company data
     ```
 
 ### DELETE /companies/:id
-Remove a company data based on given id
+#### Description
+- Remove a company data based on given id
 
 #### Response
-200 - OK
+_200 - OK_
 - Body
     ```json
     {
       "statusCode": 200,
       "message": "Company {id} deleted successfully"
+    }
+    ```
+_404 - Not Found_
+- Body
+    ```json
+    {
+      "statusCode": 404,
+      "error": {
+        "message": "Company not found"
+      }
+    }
+    ```
+
+### Global Error
+#### Response
+_500 - Internal Server Error_
+- Body
+    ```json
+    {
+      "statusCode": 500,
+      "error": {
+        "message": "Internal Server Error"
+      }
     }
     ```
