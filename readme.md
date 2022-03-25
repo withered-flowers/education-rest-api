@@ -95,10 +95,16 @@ Untuk List status code yang umum kita gunakan adalah sebagai berikut umumnya:
 - PATCH = 200 (OK) | 400 (Bad Request), 500 (Internal Server Error)
 - DELETE = 200 (OK), 204 (No Content) | 400 (Bad Request), 500 (Internal Server Error)
 
-Nah sekarang setelah mengetahui semua teorinya, mari kita masuk ke bagian terpenting dari semuanya, N-G-O-D-I-N-G !
+Nah sekarang setelah mengetahui semua teorinya, mari kita masuk ke bagian terpenting dari semuanya, `N-G-O-D-I-N-G !`
 
 ### Let's Code
+Pada bagian ini kita akan mencoba untuk mengoding sebuah REST API bikinan sendiri tanpa melibatkan sedikitpun pihak ketiga
+
 #### Case & Tools
+Membuat suatu aplikasi backend berbasis REST API.
+
+Dengan syarat endpoint yang harus dibuat sesuai dengan dokumentasi yang diberikan.
+
 #### Langkah 1 - Inisialisasi DB
 #### Langkah 2 - Create (Promise)
 #### Langkah 3 - Read (async / await)
@@ -106,7 +112,6 @@ Nah sekarang setelah mengetahui semua teorinya, mari kita masuk ke bagian terpen
 
 ### Referensi
 - https://jaxenter.com/serverless-application-model-173159.html
-
 - https://www.restapitutorial.com/lessons/restquicktips.html
 - https://www.restapitutorial.com/lessons/httpmethods.html
 - https://www.restapitutorial.com/httpstatuscodes.html
