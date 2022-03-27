@@ -154,6 +154,8 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
 1. Membuat sebuah file dengan nama `app.js`, file ini akan berfungsi sebagai file utama dari aplikasi ini.
 1. Menuliskan kerangka kode sebagai berikut:
     ```js
+    // File: app.js
+
     const express = require("express");
     const app = express();
 
@@ -170,21 +172,36 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
     // sebaiknya routing ini dipisah ke routers/index.js
 
     // TODO: 1. endpoint GET /companies
-    app.get("/companies", null);
+    // app.get("/companies", null);
 
-    // TODO: 2. endpoint PSOT /companies
-    app.post("/companies", null);
+    // TODO: 2. endpoint POST /companies
+    // app.post("/companies", null);
 
     // TODO: 3. DELETE /companies/:id
-    app.delete("/companies/:id", null);
+    // app.delete("/companies/:id", null);
 
     // --- End of BEST PRACTICE
 
     app.listen(port, (_) => console.log(`apps is working at ${port}`));
     ```
 1. Memodifikasi file `app.js` untuk `TODO Pertama`
-    ```app.js
+    ```js
+    // File: app.js
+    ...
+    app.get("/companies", (req, res) => {
+      Company.findAll().then((dataCompanies) => {
+        // Berhasil ambil data = 200 - OK
+        // kembalikan dalam bentuk JSON
+        res.status(200).json({
+          statusCode: 200,
+          data: dataCompanies,
+        });
+      });
+    });
     ```
+1. Jalankan kode dengan menggunakan perintah `npx nodemon app.js`
+1. Cek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
+1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
 
 #### Langkah 3 - Read (async / await)
 #### Langkah 4 - Delete (async / await)

@@ -15,14 +15,25 @@ app.use(express.json());
 // Untuk membuat best practicenya,
 // sebaiknya routing ini dipisah ke routers/index.js
 
-// TODO: 1. endpoint GET /companies
-app.get("/companies", null);
+// 1. endpoint GET /companies
+const { Company } = require("./models/index");
 
-// TODO: 2. endpoint PSOT /companies
-app.post("/companies", null);
+app.get("/companies", (req, res) => {
+  Company.findAll().then((dataCompanies) => {
+    // Berhasil ambil data = 200 - OK
+    // kembalikan dalam bentuk JSON
+    res.status(200).json({
+      statusCode: 200,
+      data: dataCompanies,
+    });
+  });
+});
+
+// TODO: 2. endpoint POST /companies
+// app.post("/companies", null);
 
 // TODO: 3. DELETE /companies/:id
-app.delete("/companies/:id", null);
+// app.delete("/companies/:id", null);
 
 // --- End of BEST PRACTICE
 
