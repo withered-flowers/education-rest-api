@@ -10,7 +10,7 @@
     - [HTTP Response Code](#http-response-code)
 1. [Let's Code](#lets-code)
     - [Case & Tools](#case-&-tools)
-    - [Langkah 1 - Inisialisasi DB](#langkah-1---inisialisasi-db)
+    - [Langkah 1 - Inisialisasi Proyek & DB](#langkah-1---inisialisasi-proyek-&-db)
     - [Langkah 2 - Create (Promise)](#langkah-2---create-promise)
     - [Langkah 3 - Read (async / await)](#langkah-3---read-async-/-await)
     - [Langkah 4 - Delete (async / await)](#langkah-4---delete-async-/-await)
@@ -105,8 +105,87 @@ Membuat suatu aplikasi backend berbasis REST API.
 
 Dengan syarat endpoint yang harus dibuat sesuai dengan dokumentasi yang diberikan (nama dokumentasi: `apiDocumentation.md`)
 
-#### Langkah 1 - Inisialisasi DB
+Buatlah sebuah REST API dengan menggunakan Express.
+
+Nah karena ini adalah pembelajaran, maka diberikan langkah yang harus dilakukan sebagai berikut:
+
+#### Langkah 1 - Inisialisasi Proyek & DB
+1. Membuat sebuah folder untuk project
+1. Menggunakan perintah `npm init -y`
+1. Menginstall package yang dibutuhkan `npm i express pg sequelize`
+1. Menginstall package dev yang dibutuhkan `npm i -D nodemon sequelize-cli`
+1. Menggunakan perintah `npx sequelize-cli init`
+1. Melakukan konfigurasi terhadap file `config/config.json`
+1. Membuat database (apabila belum dibuat) dengan menggunakan perintah `npx sequelize-cli db:create`
+1. Membuat model dan migration untuk model `Company` dengan menggunakan perintah `npx sequelize-cli model:create --name Company --attributes name:string,address:string,zipCode:string`
+1. Melakukan migrasi database dengan menggunakan perintah `npx sequelize-cli db:migrate`
+1. Karena pada pertemuan ini kita ada menggunakan file seeding, maka selanjutnya kita akan membuat file seeding dengan melakukan perintah `npx sequelize-cli seed:create --name seed-companies`
+1. Membuka file `seeders/xxxxxxxxxx-seed-companies.js` kemudian mengisikan kode berikut
+    ```js
+    "use strict";
+
+    module.exports = {
+      async up(queryInterface, Sequelize) {
+        // Membaca file
+        // equivalen dengan
+        // require('fs').readFileSync('../dummy/company.json', 'utf8');
+        const companies = require("../dummy/company.json");
+
+        companies.forEach((company) => {
+          // Karena datanya belum ada createdAt dan updatedAt untuk
+          // keperluan sequelize, maka ditambahkan di sini
+          company.createdAt = new Date();
+          company.updatedAt = new Date();
+        });
+
+        await queryInterface.bulkInsert("Companies", companies, {});
+      },
+
+      async down(queryInterface, Sequelize) {
+        await queryInterface.bulkDelete("Companies", null, {});
+      },
+    };
+    ```
+1. Menjalankan perintah seed dengan menggunakan `npx sequelize-cli db:seed:all`
+
+Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan database. Selanjutnya kita akan mulai membuat REST API dengan menggunakan Express
+
 #### Langkah 2 - Create (Promise)
+1. Membuat sebuah file dengan nama `app.js`, file ini akan berfungsi sebagai file utama dari aplikasi ini.
+1. Menuliskan kerangka kode sebagai berikut:
+    ```js
+    const express = require("express");
+    const app = express();
+
+    const port = process.env.PORT || 3000;
+
+    // middleware
+    // Menghandle content-type: application/x-www-form-urlencoded
+    app.use(express.urlencoded({ extended: false }));
+    // Menghandle content-type: application/json
+    app.use(express.json());
+
+    // --- BEST PRACITICE
+    // Untuk membuat best practicenya,
+    // sebaiknya routing ini dipisah ke routers/index.js
+
+    // TODO: 1. endpoint GET /companies
+    app.get("/companies", null);
+
+    // TODO: 2. endpoint PSOT /companies
+    app.post("/companies", null);
+
+    // TODO: 3. DELETE /companies/:id
+    app.delete("/companies/:id", null);
+
+    // --- End of BEST PRACTICE
+
+    app.listen(port, (_) => console.log(`apps is working at ${port}`));
+    ```
+1. Memodifikasi file `app.js` untuk `TODO Pertama`
+    ```app.js
+    ```
+
 #### Langkah 3 - Read (async / await)
 #### Langkah 4 - Delete (async / await)
 
