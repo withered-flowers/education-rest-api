@@ -12,6 +12,7 @@
     - [Case & Tools](#case-&-tools)
     - [Langkah 1 - Inisialisasi Proyek & DB](#langkah-1---inisialisasi-proyek-&-db)
     - [Langkah 2 - Read (Promise)](#langkah-2---read-promise)
+    - [Pre-Langkah 3 - async / await](#pre-langkah-3---async-/-await)
     - [Langkah 3 - Create (async / await)](#langkah-3---create-async-/-await)
     - [Langkah 4 - Delete (async / await)](#langkah-4---delete-async-/-await)
 1. [Referensi](#referensi)
@@ -189,24 +190,135 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
     // File: app.js
     ...
     app.get("/companies", (req, res) => {
-      Company.findAll().then((dataCompanies) => {
-        // Berhasil ambil data = 200 - OK
-        // kembalikan dalam bentuk JSON
-        res.status(200).json({
-          statusCode: 200,
-          data: dataCompanies,
+      Company.findAll()
+        .then((dataCompanies) => {
+          // Berhasil ambil data = 200 - OK
+          // kembalikan dalam bentuk JSON
+          res.status(200).json({
+            statusCode: 200,
+            data: dataCompanies,
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            statusCode: 500,
+            error: {
+              message: "Internal Server Error",
+            },
+          });
         });
-      });
     });
     ```
-1. Jalankan kode dengan menggunakan perintah `npx nodemon app.js`
-1. Cek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
+1. Menjalankan kode dengan menggunakan perintah `npx nodemon app.js`
+1. Mengecek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
 1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
 
-Sampai di tahap ini untuk 
+Sampai di tahap ini untuk endpoint GET /companies sudah selesai, sekarang kita akan melanjutkan ke endpoint `POST /companies`.
+
+Namun apabila dilihat dari kode yang kita buat, masih kurang mengikuti cara penulisan javascript `zaman now`, karena masih menggunakan `xxx.then().catch()`, aka `Promise`.
+
+Untuk endpoint yang selanjutnya, kita akan mencoba untuk menggunakan `async / await`
+
+### Pre-Langkah 3 - async / await
+`async / await` sebenarnya compatible dengan `promise`, dalam artian, semua kode yang dibuat dengan `promise` bisa diganti dengan `async / await` begitu juga sebaliknya !
+
+Contoh:
+```js
+// Promise based
+Model
+  .findAll()
+  // resolve
+  .then(data => {...})
+  // reject
+  .catch(err => {...});
+
+// async await based
+
+// function yang menggunakan await harus diberikan kata async
+async function () {
+  const data = await Model.findAll(); // promise resolve
+}
+```
+
+Nah perbedaannya adalah pada `async / await` tidak mengenal `promise reject`, sehingga untuk mendapatkan error dari `async / await`, harus dibungkus dalam `try ... catch ...` block
+
+```js
+async function () {
+  try {
+    const data = await Model.findAll(); // promise resolve
+  } catch (err) {
+    // promise reject
+  }
+}
+```
+
+Nah setelah mengetahui hal ini, mari kita coba membuat endpoint selanjutnya dengan `async / await` yah !
 
 #### Langkah 3 - Create (async / await)
+1. Membuka file `app.js`
+1. Memodifikasi file `app.js` untuk `TODO Kedua`
+    ```js
+    app.post(
+      "/companies",
+      // Jangan lupa untuk memberikan keyword async
+      async (req, res) => {
+        try {
+          const { name, address, zipCode } = req.body;
+
+          // Karena di sini kita menunggu promise yang pending
+          // gunakan kata await
+          const newCompany = await Company.create({
+            name,
+            address,
+            zipCode,
+          });
+
+          // Berhasil membuat data baru = 201 - Created
+          res.status(201).json({
+            statusCode: 201,
+            message: "Company created successfully",
+            data: newCompany,
+          });
+        } catch (err) {
+          let code = 500;
+          let msg = "Internal Server Error";
+
+          // Cek validasi sequelize
+          if (err.name === "SequelizeValidationError") {
+            code = 400;
+            // untuk error message dicoba untuk dicari sendiri yah !
+            // hint: console log error name dan error messagenya !s
+            msg = "";
+          }
+
+          res.status(code).json({
+            statusCode: code,
+            error: {
+              message: msg,
+            },
+          });
+        }
+      }
+    );
+    ```
+1. Menjalankan kode dengan menggunakan perintah `npx nodemon app.js`
+1. Mengecek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
+1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
+
+Sampai di tahap ini untuk endpoint `POST /companies` sudah selesai, sekarang kita akan melanjutkan ke endpoint `DELETE /companies/:id`.
+
+
 #### Langkah 4 - Delete (async / await)
+1. Membuka file `app.js`
+1. Memodifikasi file `app.js` untuk `TODO Ketiga`
+    ```js
+    ```
+
+1. Menjalankan kode dengan menggunakan perintah `npx nodemon app.js`
+1. Mengecek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
+1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
+
+
 
 ### Referensi
 - https://jaxenter.com/serverless-application-model-173159.html
