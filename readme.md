@@ -11,8 +11,8 @@
 1. [Let's Code](#lets-code)
     - [Case & Tools](#case-&-tools)
     - [Langkah 1 - Inisialisasi Proyek & DB](#langkah-1---inisialisasi-proyek-&-db)
-    - [Langkah 2 - Create (Promise)](#langkah-2---create-promise)
-    - [Langkah 3 - Read (async / await)](#langkah-3---read-async-/-await)
+    - [Langkah 2 - Read (Promise)](#langkah-2---read-promise)
+    - [Langkah 3 - Create (async / await)](#langkah-3---create-async-/-await)
     - [Langkah 4 - Delete (async / await)](#langkah-4---delete-async-/-await)
 1. [Referensi](#referensi)
 
@@ -150,7 +150,7 @@ Nah karena ini adalah pembelajaran, maka diberikan langkah yang harus dilakukan 
 
 Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan database. Selanjutnya kita akan mulai membuat REST API dengan menggunakan Express
 
-#### Langkah 2 - Create (Promise)
+#### Langkah 2 - Read (Promise)
 1. Membuat sebuah file dengan nama `app.js`, file ini akan berfungsi sebagai file utama dari aplikasi ini.
 1. Menuliskan kerangka kode sebagai berikut:
     ```js
@@ -203,7 +203,9 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
 1. Cek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
 1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
 
-#### Langkah 3 - Read (async / await)
+Sampai di tahap ini untuk 
+
+#### Langkah 3 - Create (async / await)
 #### Langkah 4 - Delete (async / await)
 
 ### Referensi
