@@ -10,3 +10,5 @@ Content-Type: application/x-www-form-urlencoded
 name=New Company&address=Bumi&zipCode=012345
 
 ###
+
+DELETE {{host}}/companies/5 HTTP/1.1

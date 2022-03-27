@@ -94,7 +94,51 @@ app.post(
 // seharusnya untuk async (req, res) => { ... }
 // diletakkan dalam sebuah fungsi di dalam file controller
 // TODO: 3. DELETE /companies/:id
-// app.delete("/companies/:id", null);
+app.delete("/companies/:id", async (req, res) => {
+  try {
+    const companyId = Number(req.params.id);
+
+    //  public static async destroy(options: object): Promise<number>
+    const numOfCompaniesDeleted = await Company.destroy({
+      where: {
+        id: companyId,
+      },
+    });
+
+    // apabila tidak ada yang didelete
+    if (numOfCompaniesDeleted <= 0) {
+      // kita akan membuat error bahwa company tidak ditemukan
+      // gunakan custom error via throw
+      throw new Error("COMPANY_NOT_FOUND");
+    }
+
+    // Apabila kondisi if dilewati = ada yang terhapus
+    // maka penghapusan berhasil
+    res.status(200).json({
+      statusCode: 200,
+      message: `Company ${companyId} deleted successfully`,
+    });
+  } catch (err) {
+    let code = 500;
+    let msg = "Internal Server Error";
+
+    // Kita tangkap errornya via catch (err)
+    // lalu karena tadi di atas thrownya adalah error dengan message
+    // "COMPANY_NOT_FOUND", maka kita akan membuat logic apabila
+    // messagenya adalah "COMPANY_NOT_FOUND"
+    if (err.message === "COMPANY_NOT_FOUND") {
+      code = 404;
+      msg = "Company not found";
+    }
+
+    res.status(code).json({
+      statusCode: code,
+      error: {
+        message: msg,
+      },
+    });
+  }
+});
 // --- End of BEST PRACTICE #4
 
 // --- End of BEST PRACTICE

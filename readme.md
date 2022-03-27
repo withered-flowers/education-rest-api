@@ -312,13 +312,59 @@ Sampai di tahap ini untuk endpoint `POST /companies` sudah selesai, sekarang kit
 1. Membuka file `app.js`
 1. Memodifikasi file `app.js` untuk `TODO Ketiga`
     ```js
-    ```
+    app.delete("/companies/:id", async (req, res) => {
+      try {
+        const companyId = req.params.id;
 
+        //  public static async destroy(options: object): Promise<number>
+        const numOfCompaniesDeleted = await Company.destroy({
+          where: {
+            id: companyId,
+          },
+        });
+
+        // apabila tidak ada yang didelete
+        if (numOfCompaniesDeleted <= 0) {
+          // kita akan membuat error bahwa company tidak ditemukan
+          // gunakan custom error via throw
+          throw new Error("COMPANY_NOT_FOUND");
+        }
+
+        // Apabila kondisi if dilewati = ada yang terhapus
+        // maka penghapusan berhasil
+        res.status(200).json({
+          statusCode: 200,
+          message: `Company ${companyId} deleted successfully`,
+        });
+      } catch (err) {
+        let code = 500;
+        let msg = "Internal Server Error";
+
+        // Kita tangkap errornya via catch (err)
+        // lalu karena tadi di atas thrownya adalah error dengan message
+        // "COMPANY_NOT_FOUND", maka kita akan membuat logic apabila
+        // messagenya adalah "COMPANY_NOT_FOUND"
+        if (err.message === "COMPANY_NOT_FOUND") {
+          code = 404;
+          msg = "Company not found";
+        }
+
+        res.status(code).json({
+          statusCode: code,
+          error: {
+            message: msg,
+          },
+        });
+      }
+    });
+    ```
 1. Menjalankan kode dengan menggunakan perintah `npx nodemon app.js`
 1. Mengecek dengan menggunakan HTTP client seperti `Postman`, `REST Client`, `Thunder Client`, ataupun HTTP client yang disukai.
 1. Apabila kode yang dituliskan benar, maka seharusnya hasilnya sama dengan yang ada di `apiDocumentation.md`
 
+Sampai pada tahap ini artinya kita sudah berhasil membuat REST API yang menggunakan express js dan sudah menggunakan `async / await`
 
+Selamat Belajar dan sampai jumpa di materi selanjutnya !
 
 ### Referensi
 - https://jaxenter.com/serverless-application-model-173159.html
