@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 // Menghandle content-type: application/json
 app.use(express.json());
 
-// --- BEST PRACITICE
+// --- BEST PRACTICE
 // Untuk membuat best practicenya,
 // sebaiknya routing ini dipisah ke routers/index.js
 
