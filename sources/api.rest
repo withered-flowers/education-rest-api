@@ -11,4 +11,15 @@ name=New Company&address=Bumi&zipCode=012345
 
 ###
 
+POST {{host}}/companies HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "New Company",
+  "address": "Bumi",
+  "zipCode": "012345"
+}
+
+###
+
 DELETE {{host}}/companies/5 HTTP/1.1

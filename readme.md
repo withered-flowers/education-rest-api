@@ -13,10 +13,9 @@
     - [Let's Code](#lets-code)
       - [Case \& Tools](#case--tools)
       - [Langkah 1 - Inisialisasi Proyek \& DB](#langkah-1---inisialisasi-proyek--db)
-      - [Langkah 2 - Read (Promise)](#langkah-2---read-promise)
-    - [Pre-Langkah 3 - async / await](#pre-langkah-3---async--await)
-      - [Langkah 3 - Create (async / await)](#langkah-3---create-async--await)
-      - [Langkah 4 - Delete (async / await)](#langkah-4---delete-async--await)
+      - [Langkah 2 - Read](#langkah-2---read)
+      - [Langkah 3 - Create](#langkah-3---create)
+      - [Langkah 4 - Delete](#langkah-4---delete)
     - [Referensi](#referensi)
 
 ### Prerequisite
@@ -142,19 +141,20 @@ Nah karena ini adalah pembelajaran, maka diberikan langkah yang harus dilakukan 
     ```js
     "use strict";
 
+    /** @type {import('sequelize-cli').Migration} */
     module.exports = {
       async up(queryInterface, Sequelize) {
-        // Membaca file
-        // equivalen dengan
-        // require('fs').readFileSync('../dummy/company.json', 'utf8');
+        // Membaca file, equivalen denvan
+        // require('node:fs').readFileSync('../dummy/company.json', 'utf8');
         const companies = require("../dummy/company.json");
 
-        companies.forEach((company) => {
-          // Karena datanya belum ada createdAt dan updatedAt untuk
-          // keperluan sequelize, maka ditambahkan di sini
+        // Mengubah data yang dibaca dari file
+        // Biasanya pakai map atau pakai forEach kan?
+        // Mari di sini kita akan menggunakan for .. of ..
+        for (const company of companies) {
           company.createdAt = new Date();
           company.updatedAt = new Date();
-        });
+        }
 
         await queryInterface.bulkInsert("Companies", companies, {});
       },
@@ -169,7 +169,7 @@ Nah karena ini adalah pembelajaran, maka diberikan langkah yang harus dilakukan 
 
 Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan database. Selanjutnya kita akan mulai membuat REST API dengan menggunakan Express
 
-#### Langkah 2 - Read (Promise)
+#### Langkah 2 - Read
 
 1. Membuat sebuah file dengan nama `app.js`, file ini akan berfungsi sebagai file utama dari aplikasi ini.
 1. Menuliskan kerangka kode sebagai berikut:
@@ -178,6 +178,9 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
     // File: app.js
 
     const express = require("express");
+    // Import model Company
+    const { Company } = require("./models");
+
     const app = express();
 
     const port = process.env.PORT || 3000;
@@ -211,24 +214,27 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
     ```js
     // File: app.js
     ...
-    app.get("/companies", (req, res) => {
-      Company.findAll()
-        .then((dataCompanies) => {
-          // Berhasil ambil data = 200 - OK
-          // kembalikan dalam bentuk JSON
-          res.status(200).json({
-            statusCode: 200,
-            data: dataCompanies,
-          });
-        })
-        .catch((err) => {
-          res.status(500).json({
-            statusCode: 500,
-            error: {
-              message: "Internal Server Error",
-            },
-          });
+    app.get("/companies", async (req, res) => {
+      try {
+        const dataCompanies = await Company.findAll();
+
+        // Berhasil ambil data = 200 - OK
+        // kembalikan dalam bentuk JSON
+        res.status(200).json({
+          statusCode: 200,
+          data: dataCompanies,
         });
+      } catch (err) {
+        // Log errornya untuk keperluan "kewarasan" membaca error
+        console.log(err);
+
+        res.status(500).json({
+          statusCode: 500,
+          error: {
+            message: "Internal Server Error",
+          },
+        });
+      }
     });
     ```
 
@@ -238,48 +244,7 @@ Sampai pada tahap ini kita sudah selesai melakukan inisialisasi proyek dan datab
 
 Sampai di tahap ini untuk endpoint GET /companies sudah selesai, sekarang kita akan melanjutkan ke endpoint `POST /companies`.
 
-Namun apabila dilihat dari kode yang kita buat, masih kurang mengikuti cara penulisan javascript `zaman now`, karena masih menggunakan `xxx.then().catch()`, aka `Promise`.
-
-Untuk endpoint yang selanjutnya, kita akan mencoba untuk menggunakan `async / await`
-
-### Pre-Langkah 3 - async / await
-
-`async / await` sebenarnya compatible dengan `promise`, dalam artian, semua kode yang dibuat dengan `promise` bisa diganti dengan `async / await` begitu juga sebaliknya !
-
-Contoh:
-
-```js
-// Promise based
-Model
-  .findAll()
-  // resolve
-  .then(data => {...})
-  // reject
-  .catch(err => {...});
-
-// async await based
-
-// function yang menggunakan await harus diberikan kata async
-async function () {
-  const data = await Model.findAll(); // promise resolve
-}
-```
-
-Nah perbedaannya adalah pada `async / await` tidak mengenal `promise reject`, sehingga untuk mendapatkan error dari `async / await`, harus dibungkus dalam `try ... catch ...` block
-
-```js
-async function () {
-  try {
-    const data = await Model.findAll(); // promise resolve
-  } catch (err) {
-    // promise reject
-  }
-}
-```
-
-Nah setelah mengetahui hal ini, mari kita coba membuat endpoint selanjutnya dengan `async / await` yah !
-
-#### Langkah 3 - Create (async / await)
+#### Langkah 3 - Create
 
 1. Membuka file `app.js`
 1. Memodifikasi file `app.js` untuk `TODO Kedua`
@@ -335,7 +300,7 @@ Nah setelah mengetahui hal ini, mari kita coba membuat endpoint selanjutnya deng
 
 Sampai di tahap ini untuk endpoint `POST /companies` sudah selesai, sekarang kita akan melanjutkan ke endpoint `DELETE /companies/:id`.
 
-#### Langkah 4 - Delete (async / await)
+#### Langkah 4 - Delete
 
 1. Membuka file `app.js`
 1. Memodifikasi file `app.js` untuk `TODO Ketiga`
